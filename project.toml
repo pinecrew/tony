@@ -1,0 +1,19 @@
+[project]
+name = "Hello"
+version = "0.1.0"
+authors = ["Tony", "Johny"]
+
+[build.debug]
+before = ""
+cmd = ""
+after = ""
+
+[build.release]
+before = ""
+cmd = ""
+after = ""
+
+[test]
+before = ""
+cmd = ""
+after = ""
