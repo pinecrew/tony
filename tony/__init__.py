@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 import argparse
 import toml
 import sys
@@ -57,7 +57,7 @@ def tony_test(filename):
     return True
 
 
-if __name__ == '__main__':
+def main():
     filename = 'project.toml'
 
     parser = argparse.ArgumentParser(description='Tony Build System')
@@ -87,3 +87,6 @@ if __name__ == '__main__':
         except:
             print(sys.exc_info()[1])
             exit()
+
+if __name__ == '__main__':
+    main()
