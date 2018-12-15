@@ -4,89 +4,88 @@ import toml
 import sys
 
 
-def tony_build(target, filename):
-    if isinstance(filename, str):
-        config = toml.load(filename)
-    elif isinstance(filename, dict):
-        config = filename
-    else:
-        raise ValueError('Malformed config')
-    print('build:', target)
-    print('config:', config)
+def build_handler(args):
+    if args.debug:
+        print('build:', args.target)
+        print('config:', args.file)
     return True
 
 
-def tony_bump(part, filename):
-    if isinstance(filename, str):
-        config = toml.load(filename)
-    elif isinstance(filename, dict):
-        config = filename
-    else:
-        raise ValueError('Malformed config')
-    print('bump:', part)
-    print('config:', config)
+def bump_handler(args):
+    if args.debug:
+        print('bump:', args.part)
+        print('config:', args.file)
     # ...
     # bump
     # ...
-    tony_build('release', config)
-    tony_test(config)
+    build_handler(args)
+    test_handler(args)
     return True
 
 
-def tony_package(filename):
-    if isinstance(filename, str):
-        config = toml.load(filename)
-    elif isinstance(filename, dict):
-        config = filename
-    else:
-        raise ValueError('Malformed config')
-    print('package')
-    print('config:', config)
+def package_handler(args):
+    if args.debug:
+        print('package')
+        print('config:', args.file)
     return True
 
 
-def tony_test(filename):
-    if isinstance(filename, str):
-        config = toml.load(filename)
-    elif isinstance(filename, dict):
-        config = filename
-    else:
-        raise ValueError('Malformed config')
-    print('test')
-    print('config:', config)
+def test_handler(args):
+    if args.debug:
+        print('test')
+        print('config:', args.file)
     return True
 
+def new_handler(args):
+    if args.debug:
+        print('new')
+        print('config:', args.file)
+    return True
+
+def init_handler(args):
+    if args.debug:
+        print('init')
+        print('config:', args.file)
+    return True
 
 def main():
-    filename = 'project.toml'
-
     parser = argparse.ArgumentParser(description='Tony Build System')
+    parser.add_argument('-v', '--verbose', help='increase output verbosity',
+                    action='store_true')
+    parser.add_argument('-d', '--debug', help='print debug info',
+                    action='store_true')
+    parser.add_argument('-f', '--file', help='specify configuration file',
+                    default='project.toml')
+    parser.set_defaults(handler=lambda args: parser.print_help())
+    
     subparser = parser.add_subparsers()
+
     build = subparser.add_parser('build', help='build current project')
-    build.add_argument('--build', choices=['debug', 'release'], default='debug', required=False)
+    build.add_argument('target', nargs='?', choices=['debug', 'release'], default='debug')
+    build.set_defaults(handler=build_handler)
+    
     bump = subparser.add_parser('bump', help='bump this shit')
-    bump.add_argument('--bump', choices=['major', 'minor', 'bugfix'], default='bugfix', required=False)
+    bump.add_argument('version', nargs='?', choices=['major', 'minor', 'bugfix'], default='bugfix')
+    bump.set_defaults(handler=bump_handler)
+
     package = subparser.add_parser('package', help='pack your project into archive')
-    package.add_argument('--package', default=True, required=False)
+    package.set_defaults(handler=package_handler)
+    
     test = subparser.add_parser('test', help='test your shitty code')
-    test.add_argument('--test', default=True, required=False)
+    test.set_defaults(handler=test_handler)
+    
+    new = subparser.add_parser('new', help='create empty project')
+    new.add_argument('name', nargs=1)
+    new.set_defaults(handler=new_handler)
+    
+    init = subparser.add_parser('init', help='initialize project in current directory')
+    init.add_argument('name', nargs='?', default=None)
+    init.set_defaults(handler=init_handler)
+
     args = parser.parse_args()
-    if args == argparse.Namespace():
-        parser.print_help()
-        exit()
-    else:
-        try:
-            if hasattr(args, 'build'):
-                tony_build(args.build, filename)
-            elif hasattr(args, 'bump'):
-                tony_bump(args.bump, filename)
-            elif hasattr(args, 'package'):
-                tony_package(filename)
-            elif hasattr(args, 'test'):
-                tony_test(filename)
-        except:
-            print(sys.exc_info()[1])
-            exit()
+    if args.debug:
+        print('args:', args)
+    args.handler(args)
 
 if __name__ == '__main__':
     main()
