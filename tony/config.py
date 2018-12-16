@@ -1,6 +1,7 @@
 import toml
 import sys
 
+
 class Config:
     def __init__(self, filename):
         self.filename = filename
@@ -27,13 +28,13 @@ class Config:
             if item is None:
                 return item
         return item
-    
+
     def __setitem__(self, key_chain, value):
         item = self.config
         for key in key_chain[:-1]:
             item = item[key]
         item[key_chain[-1]] = value
-    
+
     def bump_version(self, part):
         major, minor, bugfix = map(int, self['project', 'version'].split('.'))
         # increment version

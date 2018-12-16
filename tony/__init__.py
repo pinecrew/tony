@@ -4,12 +4,14 @@ import argparse
 from .config import Config
 from .run import test, build
 
+
 def build_handler(args):
     if args.debug:
         print('target:', args.target)
         print('config:', args.file)
     config = Config(args.file)
     build(config, args.target)
+
 
 def bump_handler(args):
     if args.debug:
@@ -23,10 +25,12 @@ def bump_handler(args):
     # do other stuff
     build(config, 'release')
 
+
 def package_handler(args):
     if args.debug:
         print('package')
         print('config:', args.file)
+
 
 def test_handler(args):
     if args.debug:
@@ -36,10 +40,12 @@ def test_handler(args):
     build(config, 'debug')
     test(config)
 
+
 def new_handler(args):
     if args.debug:
         print('new')
         print('config:', args.file)
+
 
 def init_handler(args):
     if args.debug:
