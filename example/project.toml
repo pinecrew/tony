@@ -1,6 +1,7 @@
 [project]
 name = "Hello"
 version = "0.1.0"
+build = 0
 authors = ["Tony", "Johny"]
 
 [build.debug]
