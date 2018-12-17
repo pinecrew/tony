@@ -1,5 +1,7 @@
 import toml
 import sys
+import glob
+import time
 
 
 class Config:
@@ -22,6 +24,8 @@ class Config:
             exit()
 
     def __getitem__(self, key_chain):
+        if not isinstance(key_chain, tuple):
+            return self.config[key_chain]
         item = self.config
         for key in key_chain:
             item = item[key]
@@ -30,6 +34,8 @@ class Config:
         return item
 
     def __setitem__(self, key_chain, value):
+        if not isinstance(key_chain, tuple):
+            self.config[key_chain] = value
         item = self.config
         for key in key_chain[:-1]:
             item = item[key]
@@ -45,3 +51,14 @@ class Config:
         elif part == 'bugfix':
             bugfix += 1
         self['project', 'version'] = f'{major}.{minor}.{bugfix}'
+
+    def fill_variables(self):
+        templates = glob.glob('./**/*.template', recursive=True)
+        for template in templates:
+            contents = ''
+            with open(template, 'r') as f:
+                contents = f.read()
+            fname = '.'.join(template.split('.')[:-1])
+            with open(fname, 'w') as f:
+                f.write(contents.format(timestamp=int(
+                    time.time()), **self['project']))

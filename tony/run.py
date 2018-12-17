@@ -18,9 +18,9 @@ def build(config, target):
     # increment build version
     config['project', 'build'] += 1
     config.save()
-
+    config.fill_variables()
     print('[info] start building process')
-
+    print('[info] version {version}, build {build}'.format(**config['project']))
     # run all
     run_cmd(config['build', target, 'before'])
     run_cmd(config['build', target, 'cmd'])
