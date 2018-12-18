@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 
 def run_cmd(cmd):
@@ -32,3 +33,10 @@ def test(config):
     run_cmd(config['test', 'before'])
     run_cmd(config['test', 'cmd'])
     run_cmd(config['test', 'after'])
+
+def package(config):
+    print('[info] start packaging')
+    if os.path.exists('package') and os.path.isdir('package'):
+        pass
+    else:
+        print('[error] package directory not found')

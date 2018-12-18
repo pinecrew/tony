@@ -2,7 +2,7 @@
 import argparse
 
 from .config import Config
-from .run import test, build
+from .run import test, build, package
 
 
 def build_handler(args):
@@ -30,6 +30,8 @@ def package_handler(args):
     if args.debug:
         print('package')
         print('config:', args.file)
+    config = Config(args.file)
+    package(config)
 
 
 def test_handler(args):
