@@ -5,14 +5,21 @@ import os
 def run_cmd(cmd):
     if cmd is None:
         return
-    with subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) as proc:
-        while proc.poll() is None:
-            print(proc.stdout.readline().decode('utf8').strip())
-        if proc.returncode != 0:
-            stderr = proc.stderr.read().decode('utf8').strip()
-            print(f'===\nstderr\n===\n{stderr}\n---')
-            print(f'[error]: command failed with code {proc.returncode}')
-            exit(-1)
+    if isinstance(cmd, str):
+        with subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) as proc:
+            while proc.poll() is None:
+                print(proc.stdout.readline().decode('utf8'), end='')
+            if proc.returncode != 0:
+                stderr = proc.stderr.read().decode('utf8').strip()
+                print(f'===\nstderr\n===\n{stderr}\n---')
+                print(f'[error]: command failed with code {proc.returncode}')
+                exit(-1)
+    elif isinstance(cmd, list):
+        for item in cmd:
+            run_cmd(item)
+    else:
+        print(f'unsupported type of cmd {type(cmd)}')
+        exit(-1)
 
 
 def build(config, target):
