@@ -2,7 +2,7 @@
 import argparse
 
 from .config import Config
-from .run import test, build, package
+from .run import test, build, package, clean
 
 
 def build_handler(args):
@@ -43,6 +43,14 @@ def test_handler(args):
     test(config)
 
 
+def clean_handler(args):
+    if args.debug:
+        print('clean')
+        print('config:', args.file)
+    config = Config(args.file)
+    clean(config)
+
+
 def new_handler(args):
     if args.debug:
         print('new')
@@ -74,6 +82,9 @@ def main():
 
     package = subparser.add_parser('package', help='pack your project into archive')
     package.set_defaults(handler=package_handler)
+
+    clean = subparser.add_parser('clean', help='clean your project')
+    clean.set_defaults(handler=clean_handler)
 
     test = subparser.add_parser('test', help='test your shitty code')
     test.set_defaults(handler=test_handler)

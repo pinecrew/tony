@@ -41,6 +41,14 @@ def test(config):
     run_cmd(config['test', 'cmd'])
     run_cmd(config['test', 'after'])
 
+
+def clean(config):
+    print('[info] start cleaning process')
+    run_cmd(config['clean', 'before'])
+    run_cmd(config['clean', 'cmd'])
+    run_cmd(config['clean', 'after'])
+
+
 def package(config):
     print('[info] start packaging')
     if os.path.exists('package') and os.path.isdir('package'):
