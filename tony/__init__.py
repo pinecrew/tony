@@ -39,8 +39,8 @@ def test_handler(args):
         print('test')
         print('config:', args.file)
     config = Config(args.file)
-    build(config, 'debug')
     test(config)
+    build(config, 'debug')
 
 
 def clean_handler(args):
