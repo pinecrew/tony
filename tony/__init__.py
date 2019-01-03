@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import colorama
 
 from .config import Config
 from .run import test, build, package, clean
@@ -64,6 +65,8 @@ def init_handler(args):
 
 
 def main():
+    colorama.init()
+
     parser = argparse.ArgumentParser(description='Tony Build System')
     parser.add_argument('-v', '--verbose', help='increase output verbosity', action='store_true')
     parser.add_argument('-d', '--debug', help='print debug info', action='store_true')
