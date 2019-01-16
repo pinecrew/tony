@@ -28,7 +28,7 @@ class Config:
             return self.config[key_chain]
         item = self.config
         for key in key_chain:
-            item = item[key]
+            item = item.get(key)
             if item is None:
                 return item
         return item

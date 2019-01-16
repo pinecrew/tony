@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import argparse
+import colorama
 
 from .config import Config
-from .run import test, build, package
+from .run import test, build, package, clean
 
 
 def build_handler(args):
@@ -39,8 +40,16 @@ def test_handler(args):
         print('test')
         print('config:', args.file)
     config = Config(args.file)
-    build(config, 'debug')
     test(config)
+    build(config, 'debug')
+
+
+def clean_handler(args):
+    if args.debug:
+        print('clean')
+        print('config:', args.file)
+    config = Config(args.file)
+    clean(config)
 
 
 def new_handler(args):
@@ -56,6 +65,8 @@ def init_handler(args):
 
 
 def main():
+    colorama.init()
+
     parser = argparse.ArgumentParser(description='Tony Build System')
     parser.add_argument('-v', '--verbose', help='increase output verbosity', action='store_true')
     parser.add_argument('-d', '--debug', help='print debug info', action='store_true')
@@ -74,6 +85,9 @@ def main():
 
     package = subparser.add_parser('package', help='pack your project into archive')
     package.set_defaults(handler=package_handler)
+
+    clean = subparser.add_parser('clean', help='clean your project')
+    clean.set_defaults(handler=clean_handler)
 
     test = subparser.add_parser('test', help='test your shitty code')
     test.set_defaults(handler=test_handler)
