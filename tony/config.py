@@ -2,6 +2,7 @@ import toml
 import sys
 import glob
 import time
+import os
 
 
 class Config:
@@ -22,6 +23,12 @@ class Config:
         except:
             print(sys.exc_info()[1])
             exit()
+
+    def env_vars(self):
+        result = os.environ.copy()
+        for key, value in self.config['project'].items():
+            result['PROJECT_' + key.upper()] = str(value)
+        return result
 
     def __getitem__(self, key_chain):
         if not isinstance(key_chain, tuple):

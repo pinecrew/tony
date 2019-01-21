@@ -3,11 +3,11 @@ import subprocess
 import os
 
 
-def run_cmd(cmd):
+def run_cmd(cmd, env=None):
     if cmd is None:
         return
     if isinstance(cmd, str):
-        with subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) as proc:
+        with subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env) as proc:
             while proc.poll() is None:
                 print(proc.stdout.readline().decode('utf8'), end='')
             if proc.returncode != 0:
@@ -17,7 +17,7 @@ def run_cmd(cmd):
                 exit(-1)
     elif isinstance(cmd, list):
         for item in cmd:
-            run_cmd(item)
+            run_cmd(item, env)
     else:
         print('[' + cl.Fore.RED + 'error' + cl.Fore.WHITE + f'] unsupported type of cmd {type(cmd)}')
         exit(-1)
@@ -32,23 +32,20 @@ def build(config, target):
     print('[' + cl.Fore.GREEN + 'info' + cl.Fore.WHITE +
           '] version {version}, build {build}'.format(**config['project']))
     # run all
-    run_cmd(config['build', target, 'before'])
-    run_cmd(config['build', target, 'cmd'])
-    run_cmd(config['build', target, 'after'])
+    for i in ['before', 'cmd', 'after']:
+        run_cmd(config['build', target, i], config.env_vars())
 
 
 def test(config):
     print('[' + cl.Fore.GREEN + 'info' + cl.Fore.WHITE + '] start testing process')
-    run_cmd(config['test', 'before'])
-    run_cmd(config['test', 'cmd'])
-    run_cmd(config['test', 'after'])
+    for i in ['before', 'cmd', 'after']:
+        run_cmd(config['test', i], config.env_vars())
 
 
 def clean(config):
     print('[' + cl.Fore.GREEN + 'info' + cl.Fore.WHITE + '] start cleaning process')
-    run_cmd(config['clean', 'before'])
-    run_cmd(config['clean', 'cmd'])
-    run_cmd(config['clean', 'after'])
+    for i in ['before', 'cmd', 'after']:
+        run_cmd(config['clean', i], config.env_vars())
 
 
 def package(config):
