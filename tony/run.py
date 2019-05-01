@@ -50,7 +50,12 @@ def clean(config):
 
 def package(config):
     print('[' + cl.Fore.GREEN + 'info' + cl.Fore.WHITE + '] start packaging')
-    if os.path.exists('package') and os.path.isdir('package'):
-        pass
+    if not config['package', 'packager']:
+        print('[' + cl.Fore.RED + 'error' +
+              cl.Fore.WHITE + '] packager is not specified')
+        return
+    packager = config['package', 'packager']
+    if os.path.exists(packager):
+        run_cmd(packager, config.env_vars())
     else:
-        print('[' + cl.Fore.RED + 'error' + cl.Fore.WHITE + '] package directory not found')
+        print('[' + cl.Fore.RED + 'error' + cl.Fore.WHITE + f'] {packager} not found')
