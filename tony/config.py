@@ -53,8 +53,11 @@ class Config:
         # increment version
         if part == 'major':
             major += 1
+            minor = 0
+            bugfix = 0
         elif part == 'minor':
             minor += 1
+            bugfix = 0
         elif part == 'bugfix':
             bugfix += 1
         self['project', 'version'] = f'{major}.{minor}.{bugfix}'
